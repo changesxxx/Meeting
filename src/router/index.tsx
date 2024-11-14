@@ -13,7 +13,6 @@ const routes: RouteObject[] = [
     children: [
       {
         index: true,
-        path: '/home',
         element: <Home />
       }
     ]

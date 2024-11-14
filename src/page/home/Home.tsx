@@ -1,6 +1,6 @@
 import { memo } from 'react'
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -9,46 +9,9 @@ import { Button } from '@/components/ui/button'
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
-import { UserRoundPlus, EllipsisVertical, CalendarRange, Clock2 } from 'lucide-react'
+import TodayMeeting from '@/page/home/cnps/TodayMeeting'
 
-//:React.ReactNode
-const TodayMeeting = memo(() => {
-  return (
-    <Card>
-      <CardHeader className='flex'>
-        <CardTitle className='flex justify-between'>
-          <div>
-            <div className='text-sm'>UI/UX Revamp Startegy</div>
-            <div className='flex text-sm text-describe py-4 gap-4'>
-              <div className='flex items-center gap-2'>
-                <CalendarRange size={16}></CalendarRange>
-                <span>2024-12-01</span>
-              </div>
-
-              <div className='flex items-center gap-2'>
-                <Clock2 size={16}></Clock2>
-                <span>56分</span>
-              </div>
-            </div>
-          </div>
-          <div className='flex gap-8'>
-            <Button>
-              <span>状态</span>
-            </Button>
-
-            <EllipsisVertical></EllipsisVertical>
-          </div>
-        </CardTitle>
-        <CardDescription>
-          These cookies allow the website to provide personalized functionality.These cookies allow the website to provide personalized
-          functionality.These cookies allow the website to provide personalized functionality.
-        </CardDescription>
-      </CardHeader>
-
-      <CardFooter>1</CardFooter>
-    </Card>
-  )
-})
+import { UserRoundPlus } from 'lucide-react'
 
 const Home = memo(() => {
   return (
@@ -114,22 +77,29 @@ const Home = memo(() => {
                   </SelectContent>
                 </Select>
               </div>
-            </div>
 
-            <div className='flex-1 flex flex-col justify-between'>
-              <div className='text-describe text-sm '>邀请参会人</div>
-              <Button variant='outline' className='bg-primary text-primary-foreground shadow hover:bg-primary/90 px-4 '>
-                <span>邀请参会人</span>
-                <UserRoundPlus></UserRoundPlus>
-              </Button>
+              <div className='flex-1 flex flex-col justify-between'>
+                <div className='text-describe text-sm '>邀请参会人</div>
+                {/* hover:bg-primary/90 */}
+                <Button variant='outline' className='text-primary-foreground shadow  px-4 '>
+                  <span>邀请参会人</span>
+                  <UserRoundPlus></UserRoundPlus>
+                </Button>
+              </div>
             </div>
           </CardFooter>
         </Card>
 
         {/*当前会议 */}
-        <div className='mt-8'>
+        <div className='mt-8 max-h-[38rem] overflow-auto scrollbar'>
           <h2 className='font-bold mb-6'>最近的会议</h2>
           <TodayMeeting></TodayMeeting>
+
+          <TodayMeeting></TodayMeeting>
+
+          <TodayMeeting></TodayMeeting>
+
+          {/* <TodayMeeting></TodayMeeting> */}
         </div>
       </div>
       {/* 

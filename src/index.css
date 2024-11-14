@@ -155,3 +155,14 @@ textarea {
 .focus-visible:ring-offset-2:focus-visible {
   offset: 0px;
 }
+
+.scrollbar::-webkit-scrollbar {
+  display: none;
+  /* width: 0.275rem !important; */
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(203 213 225 / var(--tw-bg-opacity)) !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #a3a3a3; /* 设置滑块的颜色 */
+}
