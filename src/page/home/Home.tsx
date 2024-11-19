@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useState } from 'react'
 
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -9,11 +9,16 @@ import { Button } from '@/components/ui/button'
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
+import { Calendar } from '@/components/ui/calendar'
+
 import TodayMeeting from '@/page/home/cnps/TodayMeeting'
 
 import { UserRoundPlus } from 'lucide-react'
+import IdleMeetingRoom from './cnps/IdleMeetingRoom'
 
 const Home = memo(() => {
+  const [date, setDate] = useState<Date | undefined>(new Date())
+
   return (
     /* 左侧内容
       快速创建会议
@@ -91,13 +96,16 @@ const Home = memo(() => {
         </Card>
 
         {/*当前会议 */}
-        <div className='mt-8 max-h-[38rem] overflow-auto scrollbar'>
+        <div className='mt-8  '>
           <h2 className='font-bold mb-6'>最近的会议</h2>
-          <TodayMeeting></TodayMeeting>
 
-          <TodayMeeting></TodayMeeting>
+          <div className='overflow-auto scrollbar max-h-[36rem]'>
+            <TodayMeeting></TodayMeeting>
 
-          <TodayMeeting></TodayMeeting>
+            <TodayMeeting></TodayMeeting>
+
+            <TodayMeeting></TodayMeeting>
+          </div>
 
           {/* <TodayMeeting></TodayMeeting> */}
         </div>
@@ -108,7 +116,35 @@ const Home = memo(() => {
       日历
       当前空闲可预约的会议室列表
       */}
-      <div className='flex-[2_2_0%]'>right</div>
+      <div className='flex-[2_2_0%] rounded-lg shadow-sm '>
+        <Calendar
+          mode='single'
+          selected={date}
+          onSelect={setDate}
+          className='rounded-md border w-full flex border-b-0 min-h-[320px]'
+          classNames={{
+            months: 'flex w-full flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1',
+            month: 'space-y-4 w-full flex flex-col',
+            table: 'w-full h-full border-collapse space-y-1',
+            head_row: '',
+            row: 'w-full mt-2'
+          }}
+        ></Calendar>
+
+        <div className='mt-8'>
+          <h2 className='font-bold mb-6'>当前空闲会议室</h2>
+          <div className='overflow-auto scrollbar max-h-[36rem] px-4'>
+            <IdleMeetingRoom></IdleMeetingRoom>
+
+            <IdleMeetingRoom></IdleMeetingRoom>
+
+            <IdleMeetingRoom></IdleMeetingRoom>
+
+            <IdleMeetingRoom></IdleMeetingRoom>
+            <IdleMeetingRoom></IdleMeetingRoom>
+          </div>
+        </div>
+      </div>
     </div>
   )
 })

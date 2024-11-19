@@ -6,6 +6,8 @@ import App from '@/App'
 
 import Home from '@/page/home/Home'
 
+import MeetingRoomList from '@/page/meetingRoomList/MeetingRoomList'
+
 const routes: RouteObject[] = [
   {
     path: '/',
@@ -14,6 +16,10 @@ const routes: RouteObject[] = [
       {
         index: true,
         element: <Home />
+      },
+      {
+        path: '/meetingRoom',
+        element: <MeetingRoomList />
       }
     ]
   }
