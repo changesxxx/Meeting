@@ -52,7 +52,7 @@ const MeetingRoomItemV1 = memo(() => {
                 <span>电视</span>
               </Badge>
             </div>
-            <div className='flex gap-4 py-4 text-sm items-center'>
+            <div className='flex gap-4 py-4 text-sm items-center md:text-xs'>
               <div className='flex items-center'>
                 <MeetingState state='used'></MeetingState>还有2小时结束会议
               </div>

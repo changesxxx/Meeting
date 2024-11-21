@@ -1,4 +1,6 @@
-export const filterData = [
+import {Filter} from '@/types'
+
+export const filterData :Filter[]= [
   {
     label: 'state',
     filter: [

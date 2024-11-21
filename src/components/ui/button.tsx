@@ -15,13 +15,17 @@ const buttonVariants = cva(
         secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
-        dashed: 'border-dashed border border-primary text-xs font-medium px-3 bg-background  text-primary !h-8'
+        dashed: 'border-dashed border border-primary text-xs font-medium px-3 bg-background  text-primary !h-8',
+        idle: 'border-transparent bg-lime-200 hover:bg-lime-200/80 text-lime-800',
+        used: 'border-transparent bg-sky-200 hover:bg-sky-200/80 text-sky-800',
+        end: 'border-transparent bg-orange-200 hover:bg-orange-200/80  text-orange-800'
       },
       size: {
         default: 'h-10 px-4 py-2',
         sm: 'h-9 rounded-md px-3',
         lg: 'h-11 rounded-md px-8',
-        icon: 'h-10 w-10'
+        icon: 'h-10 w-10',
+        us: 'h-6 p-3'
       }
     },
     defaultVariants: {

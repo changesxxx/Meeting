@@ -31,6 +31,8 @@ interface DataFilterButtonProps {
 }
 
 const DataFilterButton = memo(({ filterData, selectedHandle, selectedResetHandle }: DataFilterButtonProps) => {
+  console.log('重新渲染')
+
   const filterSelected = new Map()
 
   filterData.forEach((data) => {

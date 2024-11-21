@@ -2,6 +2,7 @@ import { memo } from 'react'
 
 interface MeetingStateProps {
   state: 'used' | 'idle' | 'end'
+  size?: 'sm' | 'md' | 'lg'
 }
 
 const colorMap = {
@@ -10,8 +11,14 @@ const colorMap = {
   end: 'fill-orange-400 text-orange-400'
 }
 
-const MeetingState = memo(({ state }: MeetingStateProps) => {
-  const styleText = colorMap[state]
+const sizeMap = {
+  sm: 'h-1 w-1',
+  md: 'h-2 w-2',
+  lg: 'h-3 w-3'
+}
+
+const MeetingState = memo(({ state, size = 'lg' }: MeetingStateProps) => {
+  const styleText = `${colorMap[state]} ${sizeMap[size]}`
 
   return (
     <svg
@@ -24,7 +31,7 @@ const MeetingState = memo(({ state }: MeetingStateProps) => {
       strokeWidth='2'
       strokeLinecap='round'
       strokeLinejoin='round'
-      className={`lucide lucide-circle mr-1 h-3 w-3 ${styleText}`}
+      className={`lucide lucide-circle mr-1 ${styleText}`}
     >
       <circle cx='12' cy='12' r='10'></circle>
     </svg>

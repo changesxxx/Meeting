@@ -8,6 +8,8 @@ import Home from '@/page/home/Home'
 
 import MeetingRoomList from '@/page/meetingRoomList/MeetingRoomList'
 
+import Calendar from '@/page/calendar/Calendar'
+
 const routes: RouteObject[] = [
   {
     path: '/',
@@ -20,6 +22,10 @@ const routes: RouteObject[] = [
       {
         path: '/meetingRoom',
         element: <MeetingRoomList />
+      },
+      {
+        path: '/calendar',
+        element: <Calendar />
       }
     ]
   }
