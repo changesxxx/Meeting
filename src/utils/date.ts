@@ -5,13 +5,15 @@ import updateLocale from 'dayjs/plugin/updateLocale'
 import 'dayjs/locale/zh-cn'
 import isToday from 'dayjs/plugin/isToday'
 
+import localizedFormat from 'dayjs/plugin/localizedFormat'
+
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 
 dayjs.extend(calendar)
 dayjs.extend(updateLocale)
 dayjs.extend(isSameOrBefore)
 dayjs.extend(isToday)
-
+dayjs.extend(localizedFormat)
 dayjs.locale('zh-cn')
 
 dayjs.updateLocale('zh-cn', {

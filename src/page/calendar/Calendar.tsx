@@ -113,7 +113,7 @@ const CalendarPage = memo(() => {
             </div>
           </div>
 
-          <div className='rounded-lg border  border-b-0 border-gray-200 overflow-hidden h-[calc(100%-3rem)] '>
+          <div className='rounded-lg border   border-gray-200 overflow-hidden h-[calc(100%-3rem)] '>
             {/* <CalendarByMonth></CalendarByMonth> */}
             <CalendarByWeek></CalendarByWeek>
           </div>
@@ -165,13 +165,36 @@ const CalendarByMonth = memo(() => {
 })
 
 const CalendarByWeek = memo(() => {
+  const time = ['8am', '9am', '10am', '11am', '12am', '13pm', '14pm', '15pm', '16pm', '17pm', '18pm', '19pm', '20pm', '21pm', '22pm']
   console.log(getCurrentWeek())
 
   return (
-    <div className='flex h-full'>
-      <div className='w-24'></div>
+    <div className='flex h-full overflow-auto scrollbar'>
+      <div className='w-24'>
+        <div className='h-20 border-r bg-cyan-50/100'></div>
+        {time.map((t) => (
+          <div className='h-36 text-gray-500/80 text-center border-r bg-cyan-50/80'>{t}</div>
+        ))}
+      </div>
 
-      <div className='flex-1'>2</div>
+      <div className='flex-1 grid grid-cols-7'>
+        {getCurrentWeek().map((date) => (
+          <div className='h-full border-r  last:border-r-0' key={date.format('YYYY-MM-DD')}>
+            <div className=' flex flex-col gap-2 justify-center items-center h-20 border-b'>
+              <span className='font-bold'>{date.format('DD')}</span>
+              <div className='text-sm text-gray-500/80'>{date.format('dddd')}</div>
+            </div>
+
+            <div>
+              {time.map((t) => (
+                <div key={t} className='h-36 border-b'>
+                  {t}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   )
 })

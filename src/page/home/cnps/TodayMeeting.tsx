@@ -41,9 +41,9 @@ const TodayMeeting = memo(() => {
       </CardHeader>
 
       <CardFooter className='gap-4'>
-        <Badge variant={'orgen'}>主持人:王小胖</Badge>
-        <Badge variant={'orgen'}>联系电话:13310191020</Badge>
-        <Badge variant={'orgen'}>普通会议</Badge>
+        <Badge variant={'outline'}>主持人:王小胖</Badge>
+        <Badge variant={'outline'}>联系电话:13310191020</Badge>
+        <Badge variant={'outline'}>普通会议</Badge>
       </CardFooter>
     </Card>
   )
