@@ -166,3 +166,7 @@ textarea {
   right: 0 !important;
   bottom: unset !important;
 }
+
+.date:nth-child(7n) {
+  border-right-width: 0; /* 每隔7个盒子去掉边框 */
+}
