@@ -95,3 +95,7 @@ export function getCurrentWeek(date: Dayjs = dayjs()) {
 
   return calendar
 }
+
+export function diffMinute(startTime: string, endTime: string) {
+  return dayjs(endTime).diff(dayjs(startTime), 'minute')
+}
