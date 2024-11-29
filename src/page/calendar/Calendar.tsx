@@ -30,7 +30,7 @@ import type { MeetingObject } from '@/data/meeting'
 
 import { getCalendarByMonth, isDateInCurrentMonth, getCurrentWeek, diffMinute } from '@/utils/date'
 
-const time = ['8am', '9am', '10am', '11am', '12am', '13pm', '14pm', '15pm', '16pm', '17pm', '18pm', '19pm', '20pm', '21pm', '22pm']
+const time = ['08am', '09am', '10am', '11am', '12am', '13pm', '14pm', '15pm', '16pm', '17pm', '18pm', '19pm', '20pm', '21pm', '22pm']
 
 const CalendarPage = memo(() => {
   const [showMenu, setShowMenu] = useState<MenuType>('grid')
@@ -172,13 +172,13 @@ const CalendarByWeek = memo(() => {
   const timeElHeight = 208
 
   function meetingPositionHandle(meeting: MeetingObject) {
-    var top = 0
+    let top = 0
 
-    var height = 0
+    let height = 0
 
-    var startTime = meeting.startTime.split(':')[0]
+    let startTime = meeting.startTime.split(':')[0]
 
-    var startMin = meeting.startTime.split(':')[1]
+    let startMin = meeting.startTime.split(':')[1]
 
     const index = time.findIndex((t) => t.includes(startTime))
 
@@ -235,8 +235,10 @@ const CalendarByWeek = memo(() => {
 })
 
 const CalendarByDay = memo(() => {
+  const minute = time.length * 60
+
   function roomMeetingHandle() {
-    const roomMeeting = new Map()
+    const roomMeeting = new Map<string, MeetingObject[]>()
 
     meetingList.map((meeting) => {
       const roomId = meeting.meetingRoom.id
@@ -247,23 +249,74 @@ const CalendarByDay = memo(() => {
 
       const meeting_list = roomMeeting.get(roomId)
 
-      meeting_list.push(meeting)
+      meeting_list!.push(meeting)
     })
 
-    console.log(roomMeeting)
+    const keys = [...roomMeeting.keys()]
+
+    return keys.map((key) => {
+      return (
+        <div className='flex flex-1 min-h-24 border-b border-dashed last:border-0 w-full relative ' key={key}>
+          {roomMeeting.get(key)!.map((m) => {
+            let left = 0
+
+            let wight = 0
+
+            let startTime = m.startTime.split(':')[0]
+
+            let startMin = m.startTime.split(':')[1]
+
+            const index = time.findIndex((t) => t.includes(startTime))
+
+            left = ((index * 60) / minute + Number(startMin) / minute) * 100
+
+            wight = (diffMinute(`${m.meetingDate} ${m.startTime}`, `${m.meetingDate} ${m.endTime}`) / minute) * 100
+
+            console.log(diffMinute(`${m.meetingDate} ${m.startTime}`, `${m.meetingDate} ${m.endTime}`), wight)
+
+            return (
+              <div className='absolute h-full py-2' key={m.id} style={{ left: `${left}%`, width: `${wight}%` }}>
+                <div className='flex flex-col h-full gap-1 bg-purple-300 /80 rounded-lg p-4'>
+                  <div className='truncate flex-1'>{m.name}</div>
+                  <div className='truncate flex-1'>
+                    {m.startTime} - {m.endTime}
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )
+    })
   }
 
-  roomMeetingHandle()
+  useEffect(() => {
+    const timerId = setInterval(function () {
+      let time = new Date().getTime
+
+      console.log('time:', time)
+    }, 1000 * 1)
+
+    return () => {
+      clearInterval(timerId)
+    }
+  })
 
   return (
-    <div>
-      <div className='h-16 border-b flex'>
+    <div className='h-full'>
+      <div className='h-16 border-b flex relative'>
         {time.map((t) => (
-          <span className='flex-1 flex justify-center items-center' key={t}>
-            {t}
+          //  justify-center
+          <span className='flex-1 flex  items-center justify-center text-gray-500/80 border-r-2 border-dashed last:border-0' key={t}>
+            {/* 40px  */}
+            <span className='w-10 '> {t}</span>
           </span>
         ))}
+
+        <div className='absolute bottom-0 left-5 translate-y-2/4 w-4 h-4 rounded-full bg-primary/60'></div>
       </div>
+
+      <div className='overflow-auto flex flex-col h-[calc(100%-4rem)]  '>{roomMeetingHandle()}</div>
     </div>
   )
 })
