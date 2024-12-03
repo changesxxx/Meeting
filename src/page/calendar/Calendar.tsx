@@ -1,4 +1,4 @@
-import { memo, useState, useRef, useEffect } from 'react'
+import { memo, useState, useRef, useEffect, useCallback, HtmlHTMLAttributes } from 'react'
 
 import { MenuType } from '@/types'
 
@@ -30,12 +30,18 @@ import type { MeetingObject } from '@/data/meeting'
 
 import { getCalendarByMonth, isDateInCurrentMonth, getCurrentWeek, diffMinute } from '@/utils/date'
 
+type Mode = 'day' | 'week' | 'month'
+
 const time = ['08am', '09am', '10am', '11am', '12am', '13pm', '14pm', '15pm', '16pm', '17pm', '18pm', '19pm', '20pm', '21pm', '22pm']
+
+const minute = time.length * 60
 
 const CalendarPage = memo(() => {
   const [showMenu, setShowMenu] = useState<MenuType>('grid')
 
   const [date, setDate] = useState<Date>(new Date())
+
+  const [mode, setMode] = useState<Mode>('month')
 
   //条件数据
   const { filter, selectedHandle, selectedResetHandle } = useFilterLogic(filterData)
@@ -67,14 +73,14 @@ const CalendarPage = memo(() => {
             </h3>
 
             <div className='flex gap-4'>
-              <Select>
-                <SelectTrigger className='px-3 border-0'>
-                  <SelectValue placeholder='Theme' />
+              <Select value={mode} onValueChange={(e: Mode) => setMode(e)}>
+                <SelectTrigger className='px-3 border-0 focus:ring-0 focus:ring-offset-0'>
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value='light'>Light</SelectItem>
-                  <SelectItem value='dark'>Dark</SelectItem>
-                  <SelectItem value='system'>System</SelectItem>
+                  <SelectItem value='day'>day</SelectItem>
+                  <SelectItem value='week'>week</SelectItem>
+                  <SelectItem value='month'>month</SelectItem>
                 </SelectContent>
               </Select>
               <Popover>
@@ -117,9 +123,9 @@ const CalendarPage = memo(() => {
           </div>
 
           <div className='rounded-lg border   border-gray-200 overflow-hidden h-[calc(100%-3rem)] '>
-            {/* <CalendarByMonth></CalendarByMonth> */}
-            {/* <CalendarByWeek></CalendarByWeek> */}
-            <CalendarByDay></CalendarByDay>
+            {mode == 'day' && <CalendarByDay></CalendarByDay>}
+            {mode == 'week' && <CalendarByWeek></CalendarByWeek>}
+            {mode == 'month' && <CalendarByMonth></CalendarByMonth>}
           </div>
         </Card>
       </main>
@@ -153,7 +159,10 @@ const CalendarByMonth = memo(() => {
             <div className='overflow-auto scrollbar h-[calc(100%-1.5rem)]'>
               {meetings[date.format('YYYY-MM-DD')] &&
                 meetings[date.format('YYYY-MM-DD')].map((meeting) => (
-                  <div className='bg-slate-100 rounded-sm mt-2 text-gray-950 text-sm py-1 px-2 flex gap-1 items-center shadow-md cursor-pointer'>
+                  <div
+                    className='bg-slate-100 rounded-sm mt-2 text-gray-950 text-sm py-1 px-2 flex gap-1 items-center shadow-md cursor-pointer'
+                    key={meeting.id}
+                  >
                     <div className='w-1 h-4 bg-blue-600 ' key={meeting.id}></div>
                     <div className='flex truncate flex-1 gap-2'>
                       <span>{meeting.startTime}</span> <span className='truncate'>{meeting.name}</span>
@@ -234,73 +243,91 @@ const CalendarByWeek = memo(() => {
   )
 })
 
-const CalendarByDay = memo(() => {
+const RoomMeetingByDay = memo(() => {
   const minute = time.length * 60
 
-  function roomMeetingHandle() {
-    const roomMeeting = new Map<string, MeetingObject[]>()
+  const roomMeeting = new Map<string, MeetingObject[]>()
 
-    meetingList.map((meeting) => {
-      const roomId = meeting.meetingRoom.id
+  meetingList.map((meeting) => {
+    const roomId = meeting.meetingRoom.id
 
-      if (!roomMeeting.get(roomId)) {
-        roomMeeting.set(roomId, [])
-      }
+    if (!roomMeeting.get(roomId)) {
+      roomMeeting.set(roomId, [])
+    }
 
-      const meeting_list = roomMeeting.get(roomId)
+    const meeting_list = roomMeeting.get(roomId)
 
-      meeting_list!.push(meeting)
-    })
+    meeting_list!.push(meeting)
+  })
 
-    const keys = [...roomMeeting.keys()]
+  const keys = [...roomMeeting.keys()]
 
-    return keys.map((key) => {
-      return (
-        <div className='flex flex-1 min-h-24 border-b border-dashed last:border-0 w-full relative ' key={key}>
-          {roomMeeting.get(key)!.map((m) => {
-            let left = 0
+  return keys.map((key) => {
+    return (
+      <div className='flex flex-1 min-h-24 border-b border-dashed last:border-0 w-full relative ' key={key}>
+        {roomMeeting.get(key)!.map((m) => {
+          let left = 0
 
-            let wight = 0
+          let wight = 0
 
-            let startTime = m.startTime.split(':')[0]
+          let startTime = m.startTime.split(':')[0]
 
-            let startMin = m.startTime.split(':')[1]
+          let startMin = m.startTime.split(':')[1]
 
-            const index = time.findIndex((t) => t.includes(startTime))
+          const index = time.findIndex((t) => t.includes(startTime))
 
-            left = ((index * 60) / minute + Number(startMin) / minute) * 100
+          left = ((index * 60) / minute + Number(startMin) / minute) * 100
 
-            wight = (diffMinute(`${m.meetingDate} ${m.startTime}`, `${m.meetingDate} ${m.endTime}`) / minute) * 100
+          wight = (diffMinute(`${m.meetingDate} ${m.startTime}`, `${m.meetingDate} ${m.endTime}`) / minute) * 100
 
-            console.log(diffMinute(`${m.meetingDate} ${m.startTime}`, `${m.meetingDate} ${m.endTime}`), wight)
-
-            return (
-              <div className='absolute h-full py-2' key={m.id} style={{ left: `${left}%`, width: `${wight}%` }}>
-                <div className='flex flex-col h-full gap-1 bg-purple-300 /80 rounded-lg p-4'>
-                  <div className='truncate flex-1'>{m.name}</div>
-                  <div className='truncate flex-1'>
-                    {m.startTime} - {m.endTime}
-                  </div>
+          return (
+            <div className='absolute h-full py-2' key={m.id} style={{ left: `${left}%`, width: `${wight}%` }}>
+              <div className='flex flex-col h-full gap-1 bg-purple-300 /80 rounded-lg p-4'>
+                <div className='truncate flex-1'>{m.name}</div>
+                <div className='truncate flex-1'>
+                  {m.startTime} - {m.endTime}
                 </div>
               </div>
-            )
-          })}
-        </div>
-      )
-    })
+            </div>
+          )
+        })}
+      </div>
+    )
+  })
+})
+
+function leftPositionHandle() {
+  let now = new Date()
+
+  // 获取小时和分钟
+  const hours = now.getHours()
+  const minutes = now.getMinutes()
+
+  const index = time.findIndex((t) => t.includes(hours + ''))
+
+  if (index == -1) {
+    return '0'
   }
+
+  return (((index * 60 + minutes) / minute) * 100).toFixed(2)
+}
+
+const CalendarByDay = memo(() => {
+  const [left, setLeft] = useState<string>(leftPositionHandle)
 
   useEffect(() => {
     const timerId = setInterval(function () {
-      let time = new Date().getTime
+      const osition = leftPositionHandle()
 
-      console.log('time:', time)
-    }, 1000 * 1)
+      if (osition != '0') {
+        setLeft(osition)
+      }
+    }, 1000 * 60)
 
     return () => {
       clearInterval(timerId)
     }
-  })
+  }, [])
 
   return (
     <div className='h-full'>
@@ -312,11 +339,20 @@ const CalendarByDay = memo(() => {
             <span className='w-10 '> {t}</span>
           </span>
         ))}
-
-        <div className='absolute bottom-0 left-5 translate-y-2/4 w-4 h-4 rounded-full bg-primary/60'></div>
       </div>
 
-      <div className='overflow-auto flex flex-col h-[calc(100%-4rem)]  '>{roomMeetingHandle()}</div>
+      <div className='h-full   relative'>
+        <div className='overflow-auto flex flex-col h-[calc(100%-4rem)]'>
+          <RoomMeetingByDay></RoomMeetingByDay>
+          {/* bottom-0 */}
+          {left != '0' && (
+            <div className='absolute top-0 h-full flex flex-col items-center' style={{ left: `${left}%` }}>
+              <div className={`-translate-y-2/4 w-4 h-4 rounded-full bg-primary/60`}></div>
+              <div className='w-0 h-full border-l  border-2 border-dashed border-primary'></div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   )
 })
